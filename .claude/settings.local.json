@@ -4,7 +4,12 @@
       "Bash(source \"$HOME/.cargo/env\")",
       "Bash(npm create:*)",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git fetch:*)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm test:*)",
+      "Bash(npx playwright install:*)"
     ],
     "deny": [],
     "ask": []

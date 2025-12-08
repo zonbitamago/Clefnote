@@ -97,7 +97,7 @@ export function exportToMusicXML(score: Score): void {
   URL.revokeObjectURL(url);
 }
 
-function generateMusicXML(score: Score): string {
+export function generateMusicXML(score: Score): string {
   const durationMap: Record<string, { type: string; divisions: number }> = {
     w: { type: 'whole', divisions: 4 },
     h: { type: 'half', divisions: 2 },
