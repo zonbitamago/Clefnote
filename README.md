@@ -77,7 +77,35 @@ src/
 └── utils/            # ユーティリティ
 
 src-tauri/            # Rustバックエンド
+
+src/__tests__/        # テストコード
+├── unit/             # ユニットテスト
+└── component/        # コンポーネントテスト
+
+e2e/                  # E2Eテスト
+├── pages/            # Page Objects
+└── tests/            # テストファイル
 ```
+
+## テスト
+
+### テストの実行
+
+```bash
+# ユニット/コンポーネントテスト
+npm test                    # watchモード
+npm run test:run            # 単発実行
+npm run test:coverage       # カバレッジレポート生成
+
+# E2Eテスト
+npm run test:e2e            # ヘッドレス実行
+npm run test:e2e:ui         # UIモードで実行
+```
+
+### テストフレームワーク
+
+- **ユニット/コンポーネントテスト**: Vitest + React Testing Library
+- **E2Eテスト**: Playwright
 
 ## ライセンス
 

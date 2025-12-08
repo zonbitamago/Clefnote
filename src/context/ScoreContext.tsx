@@ -50,7 +50,7 @@ const initialState: ScoreState = {
   historyIndex: -1,
 };
 
-function scoreReducer(state: ScoreState, action: ScoreAction): ScoreState {
+export function scoreReducer(state: ScoreState, action: ScoreAction): ScoreState {
   switch (action.type) {
     case 'SET_SCORE':
       return {

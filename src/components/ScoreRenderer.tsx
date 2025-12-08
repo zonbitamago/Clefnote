@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } from 'vexflow';
 import { useScore } from '../context/ScoreContext';
 import { Note, NoteOrRest, isRest } from '../types/music';
+import { getVexDuration } from '../utils/vexflowUtils';
 
 interface ScoreRendererProps {
   onNoteClick?: (measureId: string, noteId: string) => void;
@@ -18,11 +19,6 @@ export function ScoreRenderer({ onMeasureClick }: ScoreRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { state } = useScore();
   const { score, editor } = state;
-
-  const getVexDuration = (duration: string, dotted?: boolean): string => {
-    const base = duration === '8' ? '8' : duration === '16' ? '16' : duration;
-    return dotted ? base + 'd' : base;
-  };
 
   const render = useCallback(() => {
     if (!containerRef.current) return;

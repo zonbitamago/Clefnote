@@ -99,4 +99,37 @@ Initial `npm run tauri dev` takes several minutes to compile Rust dependencies. 
 Add export functions in `src/utils/fileOperations.ts`
 
 ### Testing
-Currently no test framework is set up. Consider adding Vitest for unit tests.
+
+テストフレームワーク:
+- **Unit/Component tests**: Vitest + React Testing Library
+- **E2E tests**: Playwright
+
+```bash
+# Unit/Component tests
+npm test                    # watch mode
+npm run test:run            # single run
+npm run test:coverage       # coverage report
+
+# E2E tests
+npm run test:e2e            # headless
+npm run test:e2e:ui         # UI mode
+```
+
+テストコーディング規約:
+- テストケース名は日本語で仕様を表す
+- AAAパターン（準備/実行/検証）のコメントを記述
+- E2Eテストは Page Object Model を使用
+
+ディレクトリ構成:
+```
+src/__tests__/
+├── setup.ts                # テストセットアップ（モック含む）
+├── utils/test-utils.tsx    # カスタムrender関数
+├── unit/                   # 純粋関数のテスト
+└── component/              # コンポーネントテスト
+
+e2e/
+├── playwright.config.ts
+├── pages/                  # Page Objects
+└── tests/                  # E2Eテスト
+```

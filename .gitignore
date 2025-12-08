@@ -36,3 +36,10 @@ src-tauri/target/
 
 # Claude Code (credentials may be stored here)
 .claude/
+
+# Test coverage
+coverage/
+
+# Playwright test results
+test-results/
+playwright-report/

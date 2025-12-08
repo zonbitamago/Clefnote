@@ -1,14 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import * as Tone from 'tone';
 import { Score, isRest, Note } from '../types/music';
-
-const DURATION_TO_SECONDS: Record<string, number> = {
-  w: 4,
-  h: 2,
-  q: 1,
-  '8': 0.5,
-  '16': 0.25,
-};
+import { DURATION_TO_SECONDS, keyToNote } from '../utils/audioUtils';
 
 interface PlayEvent {
   time: number;
@@ -37,12 +30,6 @@ export function useAudioPlayer() {
       });
     }
   }, []);
-
-  const keyToNote = (key: string): string => {
-    // Convert VexFlow key format (e.g., 'c/4') to Tone.js format (e.g., 'C4')
-    const [note, octave] = key.split('/');
-    return note.toUpperCase() + octave;
-  };
 
   const play = useCallback(async (score: Score) => {
     await initAudio();
