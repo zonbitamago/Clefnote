@@ -33,3 +33,6 @@ src-tauri/target/
 *.msi
 *.deb
 *.AppImage
+
+# Claude Code (credentials may be stored here)
+.claude/
