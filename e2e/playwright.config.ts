@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const SERVER_STARTUP_TIMEOUT = 120_000;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -21,6 +23,6 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:1420',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    timeout: SERVER_STARTUP_TIMEOUT,
   },
 });
