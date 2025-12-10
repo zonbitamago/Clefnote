@@ -1,5 +1,14 @@
+import { ReactNode } from 'react';
 import { useScore } from '../context/ScoreContext';
 import { NoteDuration, Accidental } from '../types/music';
+import {
+  WholeNoteIcon,
+  HalfNoteIcon,
+  QuarterNoteIcon,
+  EighthNoteIcon,
+  SixteenthNoteIcon,
+  RestIcon,
+} from './icons';
 import styles from './Toolbar.module.css';
 
 interface ToolbarProps {
@@ -24,12 +33,12 @@ export function Toolbar({
   const { state, dispatch } = useScore();
   const { editor, score } = state;
 
-  const durations: { value: NoteDuration; label: string; icon: string }[] = [
-    { value: 'w', label: '全音符', icon: '𝅝' },
-    { value: 'h', label: '2分音符', icon: '𝅗𝅥' },
-    { value: 'q', label: '4分音符', icon: '♩' },
-    { value: '8', label: '8分音符', icon: '♪' },
-    { value: '16', label: '16分音符', icon: '𝅘𝅥𝅯' },
+  const durations: { value: NoteDuration; label: string; icon: ReactNode }[] = [
+    { value: 'w', label: '全音符', icon: <WholeNoteIcon size={18} /> },
+    { value: 'h', label: '2分音符', icon: <HalfNoteIcon size={18} /> },
+    { value: 'q', label: '4分音符', icon: <QuarterNoteIcon size={18} /> },
+    { value: '8', label: '8分音符', icon: <EighthNoteIcon size={18} /> },
+    { value: '16', label: '16分音符', icon: <SixteenthNoteIcon size={18} /> },
   ];
 
   const accidentals: { value: Accidental; label: string }[] = [
@@ -89,7 +98,7 @@ export function Toolbar({
           className={`${styles.button} ${editor.isRestMode ? styles.active : ''}`}
           title="休符モード"
         >
-          𝄽
+          <RestIcon size={18} />
         </button>
         <button
           onClick={() => dispatch({ type: 'SET_DOTTED', payload: !editor.isDotted })}
