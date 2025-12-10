@@ -71,7 +71,7 @@ export class ScoreEditorPage {
     this.dottedButton = page.locator('button[title="付点"]');
 
     // ピアノキーボード（C3キーを含む要素の親コンテナ）
-    this.pianoKeyboard = page.locator('button:has-text("C3")').locator('..');
+    this.pianoKeyboard = page.locator('button:has-text("C3")').locator('xpath=..');
 
     // スコア表示
     this.scoreRenderer = page.locator('svg').first();
