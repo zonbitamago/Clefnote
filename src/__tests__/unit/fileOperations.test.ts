@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateMusicXML } from '../../utils/fileOperations';
-import { createEmptyScore, Score, Note, Rest } from '../../types/music';
+import { createEmptyScore, Note, Rest } from '../../types/music';
 
 describe('generateMusicXML', () => {
   it('基本的なXML構造を生成する', () => {

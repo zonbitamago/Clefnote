@@ -1,19 +1,34 @@
 import { describe, it, expect } from 'vitest';
 import { scoreReducer } from '../../context/ScoreContext';
-import { createEmptyScore, Note, Rest } from '../../types/music';
+import {
+  createEmptyScore,
+  Note,
+  Rest,
+  Score,
+  EditorState,
+} from '../../types/music';
+
+interface ScoreState {
+  score: Score;
+  editor: EditorState;
+  history: Score[];
+  historyIndex: number;
+}
 
 // Helper: 初期状態を作成
-function createInitialState() {
+function createInitialState(): ScoreState {
   const score = createEmptyScore();
   return {
     score,
     editor: {
       selectedNoteId: null,
       selectedMeasureId: null,
-      currentDuration: 'q' as const,
+      currentDuration: 'q',
       isRestMode: false,
       isDotted: false,
       currentAccidental: null,
+      currentOctave: 4,
+      keyboardInputMode: 'noteName',
     },
     history: [],
     historyIndex: -1,
@@ -637,7 +652,8 @@ describe('scoreReducer - ADD_MEASURE', () => {
     });
 
     // 検証
-    const lastMeasure = result.score.staves[0].measures.at(-1);
+    const measures = result.score.staves[0].measures;
+    const lastMeasure = measures[measures.length - 1];
     expect(lastMeasure?.notes).toEqual([]);
   });
 
@@ -653,7 +669,8 @@ describe('scoreReducer - ADD_MEASURE', () => {
     });
 
     // 検証
-    const lastMeasure = result.score.staves[0].measures.at(-1);
+    const measures = result.score.staves[0].measures;
+    const lastMeasure = measures[measures.length - 1];
     expect(lastMeasure?.id).toBeDefined();
     expect(lastMeasure?.id.length).toBeGreaterThan(0);
   });
@@ -775,6 +792,139 @@ describe('scoreReducer - REDO', () => {
 
     // 検証
     expect(result).toBe(initialState);
+  });
+});
+
+// T023: SET_OCTAVE, SET_INPUT_MODE (キーボード入力機能)
+describe('scoreReducer - SET_OCTAVE', () => {
+  it('オクターブを4に設定する', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_OCTAVE',
+      payload: 4,
+    });
+
+    // 検証
+    expect(result.editor.currentOctave).toBe(4);
+  });
+
+  it('オクターブを5に設定する', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_OCTAVE',
+      payload: 5,
+    });
+
+    // 検証
+    expect(result.editor.currentOctave).toBe(5);
+  });
+
+  it('オクターブを3に設定する', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_OCTAVE',
+      payload: 3,
+    });
+
+    // 検証
+    expect(result.editor.currentOctave).toBe(3);
+  });
+
+  it('オクターブを1に設定する（最小値）', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_OCTAVE',
+      payload: 1,
+    });
+
+    // 検証
+    expect(result.editor.currentOctave).toBe(1);
+  });
+
+  it('オクターブを7に設定する（最大値）', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_OCTAVE',
+      payload: 7,
+    });
+
+    // 検証
+    expect(result.editor.currentOctave).toBe(7);
+  });
+});
+
+describe('scoreReducer - SET_INPUT_MODE', () => {
+  it('入力モードをnoteNameに設定する', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_INPUT_MODE',
+      payload: 'noteName',
+    });
+
+    // 検証
+    expect(result.editor.keyboardInputMode).toBe('noteName');
+  });
+
+  it('入力モードをpianoLayoutに設定する', () => {
+    // 準備
+    const initialState = createInitialState();
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_INPUT_MODE',
+      payload: 'pianoLayout',
+    });
+
+    // 検証
+    expect(result.editor.keyboardInputMode).toBe('pianoLayout');
+  });
+
+  it('noteNameからpianoLayoutに切り替える', () => {
+    // 準備
+    const initialState = createInitialState();
+    initialState.editor.keyboardInputMode = 'noteName';
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_INPUT_MODE',
+      payload: 'pianoLayout',
+    });
+
+    // 検証
+    expect(result.editor.keyboardInputMode).toBe('pianoLayout');
+  });
+
+  it('pianoLayoutからnoteNameに切り替える', () => {
+    // 準備
+    const initialState = createInitialState();
+    initialState.editor.keyboardInputMode = 'pianoLayout';
+
+    // 実行
+    const result = scoreReducer(initialState, {
+      type: 'SET_INPUT_MODE',
+      payload: 'noteName',
+    });
+
+    // 検証
+    expect(result.editor.keyboardInputMode).toBe('noteName');
   });
 });
 

@@ -4,6 +4,8 @@ import { ScoreRenderer } from './components/ScoreRenderer';
 import { Toolbar } from './components/Toolbar';
 import { PianoKeyboard } from './components/PianoKeyboard';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
+import { useKeyboardInput } from './hooks/useKeyboardInput';
+import { useMidiInput } from './hooks/useMidiInput';
 import { saveScore, loadScore, exportToPDF, exportToMusicXML } from './utils/fileOperations';
 import './App.css';
 
@@ -61,6 +63,23 @@ function ScoreEditor() {
       });
     }
   }, [dispatch, editor, playNote, score.staves]);
+
+  // PCキーボード入力フック
+  useKeyboardInput({
+    onKeyPress: handleKeyPress,
+    enabled: true,
+  });
+
+  // MIDIキーボード入力フック
+  const {
+    isSupported: midiSupported,
+    devices: midiDevices,
+    selectedDeviceId: midiSelectedDeviceId,
+    error: midiError,
+  } = useMidiInput({
+    onKeyPress: handleKeyPress,
+    enabled: true,
+  });
 
   const handlePlay = useCallback(() => {
     play(score);
@@ -171,12 +190,18 @@ function ScoreEditor() {
 
         <div className="keyboard-container">
           <div className="keyboard-header">
-            <span>クリックまたはタップで音符を入力</span>
+            <span>クリック・タップ・PCキーボードで音符を入力</span>
             <span className="hint">
               {editor.selectedMeasureId
-                ? '選択中の小節に音符を追加します'
+                ? `オクターブ: ${editor.currentOctave} | ${editor.keyboardInputMode === 'noteName' ? 'C,D,E,F,G,A,Bキー' : 'ピアノ配列(A,S,D...)'}`
                 : '小節をクリックして選択してください'}
             </span>
+            {midiSupported && midiDevices.length > 0 && (
+              <span className="midi-status">
+                MIDI: {midiDevices.find(d => d.id === midiSelectedDeviceId)?.name || '未選択'}
+              </span>
+            )}
+            {midiError && <span className="midi-error">{midiError}</span>}
           </div>
           <PianoKeyboard onKeyPress={handleKeyPress} />
         </div>

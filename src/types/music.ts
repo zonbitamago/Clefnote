@@ -1,5 +1,6 @@
 export type NoteDuration = 'w' | 'h' | 'q' | '8' | '16';
 export type Accidental = '#' | 'b' | 'n' | null;
+export type KeyboardInputMode = 'noteName' | 'pianoLayout';
 
 export interface Note {
   id: string;
@@ -49,6 +50,8 @@ export interface EditorState {
   isRestMode: boolean;
   isDotted: boolean;
   currentAccidental: Accidental;
+  currentOctave: number;
+  keyboardInputMode: KeyboardInputMode;
 }
 
 export function isRest(noteOrRest: NoteOrRest): noteOrRest is Rest {
