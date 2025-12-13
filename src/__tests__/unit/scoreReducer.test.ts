@@ -653,6 +653,7 @@ describe('scoreReducer - ADD_MEASURE', () => {
 
     // 検証
     const measures = result.score.staves[0].measures;
+    // Note: Array.at() is not available with ES2020 lib target
     const lastMeasure = measures[measures.length - 1];
     expect(lastMeasure?.notes).toEqual([]);
   });
@@ -670,6 +671,7 @@ describe('scoreReducer - ADD_MEASURE', () => {
 
     // 検証
     const measures = result.score.staves[0].measures;
+    // Note: Array.at() is not available with ES2020 lib target
     const lastMeasure = measures[measures.length - 1];
     expect(lastMeasure?.id).toBeDefined();
     expect(lastMeasure?.id.length).toBeGreaterThan(0);
