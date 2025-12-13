@@ -7,6 +7,7 @@ import {
   Note,
   Rest,
   NoteOrRest,
+  KeyboardInputMode,
   createEmptyScore,
 } from '../types/music';
 
@@ -33,6 +34,8 @@ type ScoreAction =
   | { type: 'SET_KEY_SIGNATURE'; payload: string }
   | { type: 'SET_TITLE'; payload: string }
   | { type: 'ADD_MEASURE'; payload: { staffId: string } }
+  | { type: 'SET_OCTAVE'; payload: number }
+  | { type: 'SET_INPUT_MODE'; payload: KeyboardInputMode }
   | { type: 'UNDO' }
   | { type: 'REDO' };
 
@@ -45,6 +48,8 @@ const initialState: ScoreState = {
     isRestMode: false,
     isDotted: false,
     currentAccidental: null,
+    currentOctave: 4,
+    keyboardInputMode: 'noteName',
   },
   history: [],
   historyIndex: -1,
@@ -166,6 +171,18 @@ export function scoreReducer(state: ScoreState, action: ScoreAction): ScoreState
       return {
         ...state,
         editor: { ...state.editor, currentAccidental: action.payload },
+      };
+
+    case 'SET_OCTAVE':
+      return {
+        ...state,
+        editor: { ...state.editor, currentOctave: action.payload },
+      };
+
+    case 'SET_INPUT_MODE':
+      return {
+        ...state,
+        editor: { ...state.editor, keyboardInputMode: action.payload },
       };
 
     case 'SET_TEMPO':

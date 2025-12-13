@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useScore } from '../context/ScoreContext';
-import { NoteDuration, Accidental } from '../types/music';
+import { NoteDuration, Accidental, KeyboardInputMode } from '../types/music';
+import { MIN_OCTAVE, MAX_OCTAVE } from '../constants/keyboardMappings';
 import {
   WholeNoteIcon,
   HalfNoteIcon,
@@ -107,6 +108,59 @@ export function Toolbar({
         >
           •
         </button>
+      </div>
+
+      <div className={styles.divider} />
+
+      <div className={styles.section}>
+        <label className={styles.label}>オクターブ:</label>
+        <div className={styles.buttonGroup}>
+          <button
+            onClick={() =>
+              dispatch({
+                type: 'SET_OCTAVE',
+                payload: Math.max(MIN_OCTAVE, editor.currentOctave - 1),
+              })
+            }
+            className={styles.button}
+            disabled={editor.currentOctave <= MIN_OCTAVE}
+            title="オクターブ下げる (↓)"
+          >
+            ↓
+          </button>
+          <span className={styles.octaveDisplay}>{editor.currentOctave}</span>
+          <button
+            onClick={() =>
+              dispatch({
+                type: 'SET_OCTAVE',
+                payload: Math.min(MAX_OCTAVE, editor.currentOctave + 1),
+              })
+            }
+            className={styles.button}
+            disabled={editor.currentOctave >= MAX_OCTAVE}
+            title="オクターブ上げる (↑)"
+          >
+            ↑
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <label className={styles.label}>入力:</label>
+        <select
+          value={editor.keyboardInputMode}
+          onChange={(e) =>
+            dispatch({
+              type: 'SET_INPUT_MODE',
+              payload: e.target.value as KeyboardInputMode,
+            })
+          }
+          className={styles.select}
+          title="キーボード入力モード"
+        >
+          <option value="noteName">音名 (C,D,E...)</option>
+          <option value="pianoLayout">ピアノ配列</option>
+        </select>
       </div>
 
       <div className={styles.divider} />

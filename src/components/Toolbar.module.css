@@ -81,3 +81,34 @@
   height: 32px;
   background: #dee2e6;
 }
+
+.octaveDisplay {
+  min-width: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.select {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.select:hover {
+  border-color: #adb5bd;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover {
+  background: #fff;
+  border-color: #ced4da;
+}
