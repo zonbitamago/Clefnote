@@ -385,4 +385,149 @@ describe('Toolbar', () => {
       expect(button.className).toContain('active');
     });
   });
+
+  describe('オクターブ制御', () => {
+    it('オクターブ表示が存在する', () => {
+      // 準備
+      const props = createDefaultProps();
+
+      // 実行
+      render(<Toolbar {...props} />);
+
+      // 検証 - デフォルトオクターブ4が表示されている
+      expect(screen.getByText('オクターブ:')).toBeInTheDocument();
+      expect(screen.getByText('4')).toBeInTheDocument();
+    });
+
+    it('オクターブ上げるボタンが存在する', () => {
+      // 準備
+      const props = createDefaultProps();
+
+      // 実行
+      render(<Toolbar {...props} />);
+
+      // 検証
+      expect(screen.getByTitle('オクターブ上げる (↑)')).toBeInTheDocument();
+    });
+
+    it('オクターブ下げるボタンが存在する', () => {
+      // 準備
+      const props = createDefaultProps();
+
+      // 実行
+      render(<Toolbar {...props} />);
+
+      // 検証
+      expect(screen.getByTitle('オクターブ下げる (↓)')).toBeInTheDocument();
+    });
+
+    it('オクターブ上げるボタンをクリックするとオクターブが増加する', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+
+      // 実行
+      fireEvent.click(screen.getByTitle('オクターブ上げる (↑)'));
+
+      // 検証
+      expect(screen.getByText('5')).toBeInTheDocument();
+    });
+
+    it('オクターブ下げるボタンをクリックするとオクターブが減少する', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+
+      // 実行
+      fireEvent.click(screen.getByTitle('オクターブ下げる (↓)'));
+
+      // 検証
+      expect(screen.getByText('3')).toBeInTheDocument();
+    });
+
+    it('オクターブが7の時は上げるボタンが無効になる', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+
+      // オクターブを7まで上げる
+      for (let i = 0; i < 3; i++) {
+        fireEvent.click(screen.getByTitle('オクターブ上げる (↑)'));
+      }
+
+      // 検証 - オクターブ7でボタンが無効
+      const upButton = screen.getByTitle('オクターブ上げる (↑)');
+      expect(upButton).toBeDisabled();
+    });
+
+    it('オクターブが1の時は下げるボタンが無効になる', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+
+      // オクターブを1まで下げる
+      for (let i = 0; i < 3; i++) {
+        fireEvent.click(screen.getByTitle('オクターブ下げる (↓)'));
+      }
+
+      // 検証 - オクターブ1でボタンが無効
+      const downButton = screen.getByTitle('オクターブ下げる (↓)');
+      expect(downButton).toBeDisabled();
+    });
+  });
+
+  describe('入力モード切替', () => {
+    it('入力モード選択が存在する', () => {
+      // 準備
+      const props = createDefaultProps();
+
+      // 実行
+      render(<Toolbar {...props} />);
+
+      // 検証
+      expect(screen.getByText('入力:')).toBeInTheDocument();
+      expect(screen.getByTitle('キーボード入力モード')).toBeInTheDocument();
+    });
+
+    it('音名モードがデフォルトで選択されている', () => {
+      // 準備
+      const props = createDefaultProps();
+
+      // 実行
+      render(<Toolbar {...props} />);
+
+      // 検証
+      const select = screen.getByTitle('キーボード入力モード') as HTMLSelectElement;
+      expect(select.value).toBe('noteName');
+    });
+
+    it('ピアノ配列モードに切り替えられる', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+      const select = screen.getByTitle('キーボード入力モード') as HTMLSelectElement;
+
+      // 実行
+      fireEvent.change(select, { target: { value: 'pianoLayout' } });
+
+      // 検証
+      expect(select.value).toBe('pianoLayout');
+    });
+
+    it('音名モードに戻せる', () => {
+      // 準備
+      const props = createDefaultProps();
+      render(<Toolbar {...props} />);
+      const select = screen.getByTitle('キーボード入力モード') as HTMLSelectElement;
+
+      // ピアノ配列に変更
+      fireEvent.change(select, { target: { value: 'pianoLayout' } });
+
+      // 実行 - 音名モードに戻す
+      fireEvent.change(select, { target: { value: 'noteName' } });
+
+      // 検証
+      expect(select.value).toBe('noteName');
+    });
+  });
 });
